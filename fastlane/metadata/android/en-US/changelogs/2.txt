@@ -1,0 +1,1 @@
+First public release. yt-dlp updates are now a build option: the F-Droid build only fetches a new yt-dlp when you tap update. Adds the GPL-3.0 license and store listing.

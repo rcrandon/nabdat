@@ -583,6 +583,8 @@ private fun FailedPhase(phase: Phase.Failed) {
             "some posts need an account. Nab 'Dat can only grab public ones"
         "unsupported url" in lower -> "that site isn't one yt-dlp knows. try the post's own link"
         "connection" in lower || "reach" in lower -> "check wi-fi or data, then try again"
+        // without auto-update a stale yt-dlp is the usual culprit, and only the user can refresh it
+        !BuildConfig.YTDLP_AUTO_UPDATE -> "sites change often: ? about → ↻ update yt-dlp, then try again"
         else -> null
     }
     if (hint != null) {
@@ -650,7 +652,12 @@ private fun AboutSheet(onDismiss: () -> Unit) {
                         Text(it, style = Type.tiny, color = palette.gray)
                     }
                     Gap(4.dp)
-                    Text("checks by itself once a day, and again whenever a site stops working", style = Type.tiny, color = palette.gray)
+                    Text(
+                        if (BuildConfig.YTDLP_AUTO_UPDATE) "checks by itself once a day, and again whenever a site stops working"
+                        else "only updates when you tap it. if a site stops working, try this first",
+                        style = Type.tiny,
+                        color = palette.gray,
+                    )
                 }
             }
             Gap(14.dp)

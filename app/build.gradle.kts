@@ -12,6 +12,10 @@ val bundledYtDlp = "2026.08.19"
 val abis = (findProperty("nabdat.abis") as String? ?: "arm64-v8a")
     .split(',').map { it.trim() }.filter { it.isNotEmpty() }
 
+// F-Droid builds pass -Pnabdat.autoUpdateYtDlp=false: F-Droid only allows fetching new code
+// when the user asks for it, so those builds update yt-dlp from the about sheet button only.
+val autoUpdateYtDlp = (findProperty("nabdat.autoUpdateYtDlp") as String?)?.toBooleanStrict() ?: true
+
 val keystoreProps = Properties().apply {
     val f = rootProject.file("keystore/keystore.properties")
     if (f.exists()) f.inputStream().use { load(it) }
@@ -26,10 +30,12 @@ android {
         minSdk = 29
         targetSdk = 36
         // 1.0.0 = yoinks 1.0.1 renamed to Nab 'Dat, under its own app id so it installs beside yoinks.
-        versionCode = 1
-        versionName = "1.0.0"
+        // 1.0.1 = first public release: F-Droid-ready build switches, licenses, store metadata.
+        versionCode = 2
+        versionName = "1.0.1"
 
         buildConfigField("String", "YTDLP_BUNDLED", "\"$bundledYtDlp\"")
+        buildConfigField("boolean", "YTDLP_AUTO_UPDATE", "$autoUpdateYtDlp")
         buildConfigField("long", "BUILD_TIME", "${System.currentTimeMillis()}L")
 
         ndk { abiFilters += abis }
@@ -51,7 +57,9 @@ android {
             isMinifyEnabled = true
             isShrinkResources = true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
-            signingConfig = signingConfigs.findByName("release") ?: signingConfigs.getByName("debug")
+            // no keystore/ means an unsigned APK, which is what F-Droid wants to sign itself;
+            // build.ps1 creates the key before its first build
+            signingConfigs.findByName("release")?.let { signingConfig = it }
         }
         debug {
             applicationIdSuffix = ".debug"

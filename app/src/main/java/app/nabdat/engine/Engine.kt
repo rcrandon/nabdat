@@ -140,6 +140,7 @@ object Engine {
     }
 
     private suspend fun maybeAutoUpdate() {
+        if (!BuildConfig.YTDLP_AUTO_UPDATE) return
         if (System.currentTimeMillis() - Prefs.lastUpdateCheck < UPDATE_EVERY_MS) return
         runCatching { update() }
     }
@@ -184,8 +185,9 @@ object Engine {
             probeOnce(url)
         } catch (e: NabError) {
             // Sites change and yt-dlp ships fixes weekly. If our copy might be stale, refresh and retry once.
+            // Builds without auto-update (F-Droid) leave that to the user, the failure screen says how.
             val stale = System.currentTimeMillis() - Prefs.lastUpdateCheck > RETRY_UPDATE_AFTER_MS
-            if (!stale || looksLikeNetworkTrouble(e.message)) throw e
+            if (!BuildConfig.YTDLP_AUTO_UPDATE || !stale || looksLikeNetworkTrouble(e.message)) throw e
             onStatus("updating yt-dlp…")
             val updated = runCatching { update() }.getOrDefault(false)
             if (!updated) throw e
