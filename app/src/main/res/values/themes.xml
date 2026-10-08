@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="nabdat_bg">#FFFFFF</color>
+    <color name="nabdat_fg">#18181B</color>
+
+    <style name="Theme.NabDat" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:windowBackground">@color/nabdat_bg</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowLightNavigationBar">true</item>
+    </style>
+</resources>

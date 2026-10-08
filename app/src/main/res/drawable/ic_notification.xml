@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- the wordmark's N in 4dp pixels, solid: a 2dp dither is mush in the status bar -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp" android:height="24dp"
+    android:viewportWidth="24" android:viewportHeight="24">
+    <path android:fillColor="#FFFFFF" android:pathData="M4,2h4v20h-4zM8,2h4v4h-4zM12,6h4v4h-4zM16,2h4v20h-4z" />
+</vector>
